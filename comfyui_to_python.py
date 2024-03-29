@@ -7,6 +7,7 @@ import random
 import sys
 import re
 from typing import Dict, List, Any, Callable, Tuple
+import argparse
 
 import black
 
@@ -16,6 +17,16 @@ from utils import import_custom_nodes, find_path, add_comfyui_directory_to_sys_p
 sys.path.append('../')
 from nodes import NODE_CLASS_MAPPINGS
 
+def parse_args():
+    
+    parser = argparse.ArgumentParser(description="arguments for mp3 to video generation")
+    parser.add_argument(
+        "--input_file", type=str, default='workflow_api.json',
+        help="path to workflow exported in API format"
+    )
+    
+    user_args = parser.parse_args()
+    return user_args
 
 class FileHandler:
     """Handles reading and writing files.
@@ -452,9 +463,10 @@ class ComfyUItoPython:
 
 if __name__ == '__main__':
     # Update class parameters here
-    input_file = 'workflow_api.json'
-    output_file = 'workflow_api.py'
-    queue_size = 10
+    user_args = parse_args()
+    input_file = user_args.input_file
+    output_file = user_args.input_file.replace('.json', '.py')
+    queue_size = 1
 
     # Convert ComfyUI workflow to Python
     ComfyUItoPython(input_file=input_file, output_file=output_file, queue_size=queue_size)
